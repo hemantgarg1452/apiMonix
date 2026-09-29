@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: apimonix
+
+  datasource:
+    url: ${SUPABASE_DB_URL}
+    username: ${SUPABASE_DB_USER}
+    password: ${SUPABASE_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate.ddl-auto: validate
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  server:
+    port: 8080
+
+  apimonix:
+    supabase:
+      jwt-secret: ${SUPABASE_JWT_SECRET}
+    resend:
+      api-key: ${RESEND_API_KEY}
+    key-id: ${RAZORPAY_KEY_ID}
+    key-secret: ${RAZORPAY_KEY_SECRET}
+
+  ping:
+    interval-ms: 900000
+    timeout-mis: 10000
