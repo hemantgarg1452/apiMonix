@@ -30,3 +30,8 @@ spring:
   ping:
     interval-ms: 900000
     timeout-mis: 10000
+
+  logging:
+    level:
+      com.apimonix: INFO
+      org.springframework.scheduling: WARN
