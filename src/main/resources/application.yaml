@@ -19,19 +19,20 @@ spring:
   server:
     port: 8080
 
-  apimonix:
-    supabase:
-      jwt-secret: ${SUPABASE_JWT_SECRET}
-    resend:
-      api-key: ${RESEND_API_KEY}
-    key-id: ${RAZORPAY_KEY_ID}
-    key-secret: ${RAZORPAY_KEY_SECRET}
+apimonix:
+  supabase:
+    jwt-secret: ${SUPABASE_JWT_SECRET}
+  resend:
+    api-key: ${RESEND_API_KEY}
+    from-email: onboarding@resend.dev
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
 
-  ping:
-    interval-ms: 900000
-    timeout-mis: 10000
+ping:
+  interval-ms: 900000
+  timeout-mis: 10000
 
-  logging:
-    level:
-      com.apimonix: INFO
-      org.springframework.scheduling: WARN
+logging:
+  level:
+    com.apimonix: INFO
+    org.springframework.scheduling: WARN
