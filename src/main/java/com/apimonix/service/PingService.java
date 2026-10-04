@@ -20,6 +20,7 @@ public class PingService {
     private final WebClient webClient;
     private final PingLogRepository pingLogRepository;
     private final IncidentRepository incidentRepository;
+    private final AlertService alertService;
 
 
     public PingLog ping(Endpoint endpoint){
@@ -76,6 +77,8 @@ public class PingService {
 
             log.info("Incident opened for endpoint [{}] url=[{}]",
                     endpoint.getId(), endpoint.getUrl());
+
+            alertService.sendDownAlert(endpoint);
         }
 
         if(isUp && hasOpenIncident){
@@ -83,6 +86,8 @@ public class PingService {
 
             log.info("Incident resolved for endpoint [{}] url=[{}]",
                     endpoint.getId(), endpoint.getUrl());
+
+            alertService.sendRecoveryAlert(endpoint);
         }
     }
 }

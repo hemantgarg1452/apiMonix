@@ -14,7 +14,7 @@ public interface EndpointRepository extends JpaRepository<Endpoint, UUID> {
 
     @Query("""
         SELECT e FROM Endpoint e
-        JOIN e.user u
+        JOIN FETCH e.user u
         WHERE e.active = true
         AND u.plan = :plan
     """)
