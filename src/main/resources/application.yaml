@@ -22,6 +22,7 @@ spring:
 apimonix:
   supabase:
     jwt-secret: ${SUPABASE_JWT_SECRET}
+    url: ${SUPABASE_URL}
   resend:
     api-key: ${RESEND_API_KEY}
     from-email: onboarding@resend.dev
