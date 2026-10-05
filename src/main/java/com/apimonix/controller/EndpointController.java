@@ -1,12 +1,14 @@
 package com.apimonix.controller;
 
 import com.apimonix.model.Endpoint;
+import com.apimonix.config.AuthUser;
 import com.apimonix.model.PingLog;
 import com.apimonix.repository.PingLogRepository;
 import com.apimonix.service.EndpointService;
 import com.apimonix.service.UptimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,32 +23,37 @@ public class EndpointController {
     private final PingLogRepository pingLogRepository;
 
     @GetMapping
-    public ResponseEntity<List<Endpoint>> getEndpoints(){
-        UUID userId = UUID.fromString("12e80951-225e-4ccf-b11f-a3b986504783");
-        return ResponseEntity.ok(endpointService.getEndpoints(userId));
+    public ResponseEntity<List<Endpoint>> getEndpoints(@AuthenticationPrincipal AuthUser authUser){
+        return ResponseEntity.ok(endpointService.getEndpoints(authUser.getId()));
     }
 
     @PostMapping
-    public ResponseEntity<Endpoint> addEndpoint(@RequestBody AddEndpointRequest request){
-        UUID userId = UUID.fromString("12e80951-225e-4ccf-b11f-a3b986504783");
-        Endpoint endpoint = endpointService.addEndpoint(userId, request.name(), request.url());
+    public ResponseEntity<Endpoint> addEndpoint(
+            @RequestBody AddEndpointRequest request,
+            @AuthenticationPrincipal AuthUser authUser){
+        Endpoint endpoint = endpointService.addEndpoint(authUser.getId(), request.name(), request.url());
         return ResponseEntity.ok(endpoint);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEndpoint(@PathVariable UUID id){
-        UUID userId = UUID.fromString("12e80951-225e-4ccf-b11f-a3b986504783");
-        endpointService.deleteEndpoint(id, userId);
+    public ResponseEntity<Void> deleteEndpoint(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal AuthUser authUser){
+        endpointService.deleteEndpoint(id, authUser.getId());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/uptime")
-    public ResponseEntity<UptimeService.UptimeSummary> getUptime(@PathVariable UUID id){
+    public ResponseEntity<UptimeService.UptimeSummary> getUptime(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal AuthUser authUser){
         return ResponseEntity.ok(uptimeService.getSummary(id));
     }
 
     @GetMapping("/{id}/logs")
-    public ResponseEntity<List<PingLog>> getLogs(@PathVariable UUID id){
+    public ResponseEntity<List<PingLog>> getLogs(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal AuthUser authUser){
         return ResponseEntity.ok(
                 pingLogRepository.findTop50ByEndpointIdOrderByCheckedAtDesc(id));
     }
