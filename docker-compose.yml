@@ -1,0 +1,32 @@
+services:
+  apimonix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: apimonix-app
+
+    ports:
+      - 8080:8080
+
+    env_file:
+      - .env
+
+    restart: unless-stopped
+
+  nginx:
+      image: nginx:alpine
+      container_name: apimonix-nginx
+
+      ports:
+        - "80:80"
+        - "443:443"
+
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+        - ./nginx/certs:/etc/nginx/certs:ro
+
+      depends_on:
+        - apimonix
+
+      restart: unless-stopped
