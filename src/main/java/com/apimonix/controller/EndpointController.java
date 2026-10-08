@@ -31,7 +31,11 @@ public class EndpointController {
     public ResponseEntity<Endpoint> addEndpoint(
             @RequestBody AddEndpointRequest request,
             @AuthenticationPrincipal AuthUser authUser){
-        Endpoint endpoint = endpointService.addEndpoint(authUser.getId(), request.name(), request.url());
+        Endpoint endpoint = endpointService.addEndpoint(
+                authUser.getId(),
+                authUser.getPlan(),
+                request.name(),
+                request.url());
         return ResponseEntity.ok(endpoint);
     }
 

@@ -10,4 +10,5 @@ import java.util.UUID;
 public class AuthUser {
     private final UUID id;
     private final String email;
+    private final String plan;
 }

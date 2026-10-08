@@ -1,5 +1,7 @@
 package com.apimonix.config;
 
+import com.apimonix.model.User;
+import com.apimonix.service.UserService;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.SignedJWT;
@@ -7,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +26,10 @@ import java.util.UUID;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SupabaseJwtFilter extends OncePerRequestFilter {
+
+    private final UserService userService;
 
     @Value("${apimonix.supabase.url}")
     private String supabaseUrl;
@@ -97,7 +103,15 @@ public class SupabaseJwtFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            AuthUser authUser = new AuthUser(UUID.fromString(userId), email);
+            User dbUser = userService.getOrCreateUser(
+                    UUID.fromString(userId), email
+            );
+
+            AuthUser authUser = new AuthUser(
+                    UUID.fromString(userId),
+                    email,
+                    dbUser.getPlan()
+            );
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
@@ -105,6 +119,7 @@ public class SupabaseJwtFilter extends OncePerRequestFilter {
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_USER"))
                     );
+
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {

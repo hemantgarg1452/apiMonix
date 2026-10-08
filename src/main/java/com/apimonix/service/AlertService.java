@@ -49,7 +49,7 @@ public class AlertService {
                                             We'll notify you when it recovers.
                                         </p>
                                         <p style="color: #6b7280; font-size: 12px; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
-                                            Apimonix — API Monitoring
+                                            Apimonix - API Monitoring
                                         </p>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@ public class AlertService {
                                             Your service is responding normally again.
                                         </p>
                                         <p style="color: #6b7280; font-size: 12px; margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 16px;">
-                                            Apimonix — API Monitoring
+                                            Apimonix - API Monitoring
                                         </p>
                                     </div>
                                 </div>

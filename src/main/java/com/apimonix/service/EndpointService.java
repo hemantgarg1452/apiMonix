@@ -29,13 +29,13 @@ public class EndpointService {
         return endpointRepository.findByUserIdAndActiveTrue(userId);
     }
 
-    public Endpoint addEndpoint(UUID userId, String name, String url){
+    public Endpoint addEndpoint(UUID userId, String userPlan, String name, String url){
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User not found"));
 
         int currentCount = endpointRepository.countByUserIdAndActiveTrue(userId);
-        int limit = PLAN_LIMITS.getOrDefault(user.getPlan(), 1);
+        int limit = PLAN_LIMITS.getOrDefault(userPlan, 1);
 
         if(currentCount >= limit){
             throw new ResponseStatusException(
@@ -51,9 +51,13 @@ public class EndpointService {
             );
         }
 
-        int intervalMins = user.getPlan().equals("FREE") ? 15 : 5;
+        int intervalMins = userPlan.equals("FREE") ? 15 : 5;
+
+        User userRef = new User();
+        userRef.setId(userId);
+
         Endpoint endpoint = Endpoint.builder()
-                .user(user)
+                .user(userRef)
                 .name(name)
                 .url(url)
                 .intervalMins(intervalMins)
