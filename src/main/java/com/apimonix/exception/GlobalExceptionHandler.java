@@ -54,4 +54,12 @@ public class GlobalExceptionHandler {
                 "timestamp", Instant.now().toString()
         );
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(
+            ValidationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorBody(400, ex.getMessage()));
+    }
 }
