@@ -51,6 +51,7 @@ public class EndpointController {
     public ResponseEntity<UptimeService.UptimeSummary> getUptime(
             @PathVariable UUID id,
             @AuthenticationPrincipal AuthUser authUser){
+        endpointService.verifyOwnership(id, authUser.getId());
         return ResponseEntity.ok(uptimeService.getSummary(id));
     }
 
@@ -58,6 +59,7 @@ public class EndpointController {
     public ResponseEntity<List<PingLog>> getLogs(
             @PathVariable UUID id,
             @AuthenticationPrincipal AuthUser authUser){
+        endpointService.verifyOwnership(id, authUser.getId());
         return ResponseEntity.ok(
                 pingLogRepository.findTop50ByEndpointIdOrderByCheckedAtDesc(id));
     }
