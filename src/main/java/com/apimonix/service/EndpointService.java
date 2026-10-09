@@ -4,6 +4,7 @@ import com.apimonix.model.Endpoint;
 import com.apimonix.model.User;
 import com.apimonix.repository.EndpointRepository;
 import com.apimonix.repository.UserRepository;
+import com.apimonix.util.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class EndpointService {
     }
 
     public Endpoint addEndpoint(UUID userId, String userPlan, String name, String url){
+        Validator.validateEndpointName(name);
+        Validator.validateUrl(url);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "User not found"));
