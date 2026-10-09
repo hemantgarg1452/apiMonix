@@ -79,4 +79,20 @@ public class EndpointService {
         endpoint.setActive(false);
         endpointRepository.save(endpoint);
     }
+
+    private Endpoint getEndpointAndVerifyOwnership(UUID endpointId, UUID userId){
+        Endpoint endpoint = endpointRepository.findById(endpointId)
+                .orElseThrow(()->new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Endpoint not found"));
+
+        if(!endpoint.getUser().getId().equals(userId)){
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Access denied");
+        }
+        return endpoint;
+    }
+
+    public void verifyOwnership(UUID endpointId, UUID userId){
+        getEndpointAndVerifyOwnership(endpointId, userId);
+    }
 }
