@@ -1,5 +1,6 @@
 package com.apimonix.service;
 
+import com.apimonix.metrics.ApimonixMetrics;
 import com.apimonix.model.Endpoint;
 import com.apimonix.model.Incident;
 import com.apimonix.model.PingLog;
@@ -21,9 +22,12 @@ public class PingService {
     private final PingLogRepository pingLogRepository;
     private final IncidentRepository incidentRepository;
     private final AlertService alertService;
+    private final ApimonixMetrics metrics;
 
 
     public PingLog ping(Endpoint endpoint){
+        return metrics.getPingDuration().record(()->{
+
         long startTime = System.currentTimeMillis();
         boolean isUp = false;
         int statusCode = 0;
@@ -60,6 +64,7 @@ public class PingService {
 
         handleIncident(endpoint, isUp, failReason);
         return pingLog;
+        });
     }
 
     private void handleIncident(Endpoint endpoint, boolean isUp, String failReason){

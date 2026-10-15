@@ -37,3 +37,16 @@ logging:
   level:
     com.apimonix: INFO
     org.springframework.scheduling: WARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+    endpoint:
+      health:
+        show-details: always
+        show-components: always
+  metrics:
+    tags:
+      application: apimonix
