@@ -1,5 +1,6 @@
 package com.apimonix.service;
 
+import com.apimonix.metrics.ApimonixMetrics;
 import com.apimonix.model.Endpoint;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class AlertService {
+    private final ApimonixMetrics metrics;
 
     @Value("${apimonix.resend.api-key}")
     private String resendApiKey;
@@ -111,8 +113,10 @@ public class AlertService {
                     .toBodilessEntity();
 
             log.info("Alert email sent to [{}] - subject: {}", to, subject);
+            metrics.getAlertsSent().increment();
         } catch (Exception e){
             log.error("Failed to send alert email to [{}]: {}", to, e);
+            metrics.getAlertsFailed().increment();
         }
     }
 
